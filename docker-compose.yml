@@ -1,0 +1,26 @@
+services:
+  location_service:
+    image: uber_clone/location_service
+    build: .
+    container_name: location_service
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: '8080'
+      REDIS_ADDR: 'redis:6379'
+    depends_on:
+      - redis
+  redis:
+    image: redis/redis-stack:latest
+    container_name: driver_location_redis
+    environment:
+      REDIS_ARGS: ""
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
+
