@@ -20,7 +20,22 @@ services:
       - "8001:8001"
     volumes:
       - redis-data:/data
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
 
 volumes:
   redis-data:
-
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."

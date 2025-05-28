@@ -86,7 +86,7 @@ func (app *App) Run(addr string) {
 		Handler:      app.Router,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		IdleTimeout:  6 * 60 * time.Second,
 	}
 
 	go func() {

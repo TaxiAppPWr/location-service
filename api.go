@@ -79,7 +79,7 @@ func (app *App) UpdateDriverLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pipe.Set(ctx, driverKey, driverData, 1*time.Minute)
+	pipe.Set(ctx, driverKey, driverData, 5*time.Minute)
 
 	pipe.GeoAdd(ctx, GeoSetKey, &redis.GeoLocation{
 		Name:      update.DriverID,
