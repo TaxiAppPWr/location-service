@@ -74,10 +74,10 @@ func (app *App) setupExpirationListener() {
 }
 
 func (app *App) setupRoutes() {
-	app.Router.HandleFunc("api/location/health", app.HealthCheck).Methods("GET")
-	app.Router.HandleFunc("api/location/drivers/update", app.UpdateDriverLocation).Methods("POST")
-	app.Router.HandleFunc("api/location/drivers/nearby", app.FindNearbyDrivers).Methods("POST")
-	app.Router.HandleFunc("api/location/drivers/{id}", app.GetDriver).Methods("GET")
+	app.Router.HandleFunc("/api/location/health", app.HealthCheck).Methods("GET")
+	app.Router.HandleFunc("/api/location/drivers/update", app.UpdateDriverLocation).Methods("POST")
+	app.Router.HandleFunc("/api/location/drivers/nearby", app.FindNearbyDrivers).Methods("POST")
+	app.Router.HandleFunc("/api/location/drivers/{id}", app.GetDriver).Methods("GET")
 }
 
 func (app *App) Run(addr string) {
