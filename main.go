@@ -12,6 +12,10 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
 )
 
 type App struct {
@@ -80,6 +84,26 @@ func (app *App) setupRoutes() {
 	app.Router.HandleFunc("/api/location/drivers/{id}", app.GetDriver).Methods("GET")
 }
 
+// Load AWS SSM parameters for Redis configuration
+func loadRedisConfigFromSSM() (string, error) {
+	cfg, err := config.LoadDefaultConfig(context.Background(), config.WithRegion("us-east-1"))
+	if err != nil {
+		return "", fmt.Errorf("failed to load AWS config: %w", err)
+	}
+
+	ssmClient := ssm.NewFromConfig(cfg)
+
+	param, err := ssmClient.GetParameter(context.Background(), &ssm.GetParameterInput{
+		Name:           aws.String("/location/"),
+		WithDecryption: true,
+	})
+	if err != nil {
+		return "", fmt.Errorf("failed to get Redis parameter from SSM: %w", err)
+	}
+
+	return *param.Parameter.Value, nil
+}
+
 func (app *App) Run(addr string) {
 	srv := &http.Server{
 		Addr:         addr,
@@ -120,9 +144,15 @@ func (app *App) Run(addr string) {
 func main() {
 	app := App{}
 
-	redisAddr := os.Getenv("REDIS_ADDR")
+	redisAddr, err := loadRedisConfigFromSSM()
+	if err != nil {
+		log.Printf("Failed to load Redis configuration from SSM: %v", err)
+	}
 	if redisAddr == "" {
-		redisAddr = "localhost:6379"
+		redisAddr := os.Getenv("REDIS_ADDR")
+		if redisAddr == "" {
+			redisAddr = "localhost:6379"
+		}
 	}
 
 	port := os.Getenv("PORT")
