@@ -94,7 +94,7 @@ func loadRedisConfigFromSSM() (string, error) {
 	ssmClient := ssm.NewFromConfig(cfg)
 
 	param, err := ssmClient.GetParameter(context.Background(), &ssm.GetParameterInput{
-		Name:           aws.String("/location/"),
+		Name:           aws.String("/location/redis.url"),
 		WithDecryption: aws.Bool(true),
 	})
 	if err != nil {
