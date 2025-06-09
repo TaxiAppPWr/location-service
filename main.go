@@ -95,7 +95,7 @@ func loadRedisConfigFromSSM() (string, error) {
 
 	param, err := ssmClient.GetParameter(context.Background(), &ssm.GetParameterInput{
 		Name:           aws.String("/location/"),
-		WithDecryption: true,
+		WithDecryption: aws.Bool(true),
 	})
 	if err != nil {
 		return "", fmt.Errorf("failed to get Redis parameter from SSM: %w", err)
