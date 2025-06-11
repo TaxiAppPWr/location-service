@@ -60,6 +60,10 @@ func (app *App) UpdateDriverLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Logowanie żądania po poprawnym sparsowaniu
+	fmt.Printf("UpdateDriverLocation request: driverId=%s, latitude=%f, longitude=%f, isActive=%v\n",
+		update.DriverID, update.Latitude, update.Longitude, update.IsActive)
+
 	ctx := context.Background()
 
 	driver := Driver{
