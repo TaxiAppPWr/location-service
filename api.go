@@ -60,7 +60,14 @@ func (app *App) UpdateDriverLocation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Logowanie żądania po poprawnym sparsowaniu
+	driverID := r.Header.Get("username")
+	if driverID == "" {
+		fmt.Printf("UpdateDriverLocation request missing username header\n")
+		respondWithError(w, http.StatusBadRequest, "Missing username header")
+		return
+	}
+	update.DriverID = driverID
+
 	fmt.Printf("UpdateDriverLocation request: driverId=%s, latitude=%f, longitude=%f, isActive=%v\n",
 		update.DriverID, update.Latitude, update.Longitude, update.IsActive)
 
